@@ -8,19 +8,13 @@ const io = socketIO(server);
 
 let timer = 25 * 60; // Initial time in seconds (25 minutes)
 let is25MinuteInterval = true; // Flag to track the current interval
-
 let interval; // Variable to store the interval
 
-io.on('connection', (socket) => {
-    // Send the current timer and interval flag to a new user
-    socket.emit('updateTimer', { time: formatTime(timer), is25MinuteInterval });
+let userCount = 0; // Initialize number of users (0 when server starts)
+const userCountUpdateDelay = 10000; // Initialize delay (ms) for updating number of users
 
-    // If there's an existing interval, clear it
-    if (interval) {
-        clearInterval(interval);
-    }
-
-    // Update the timer every second
+// Function to update the timer every second
+function updateTimer() {
     interval = setInterval(() => {
         timer--;
 
@@ -38,7 +32,34 @@ io.on('connection', (socket) => {
             clearInterval(interval); // Stop the interval after the 5-minute break
         }
     }, 1000);
-});
+}
+
+// Function to format time as "mm:ss"
+function formatTime(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+}
+
+// Function to show number of active users currently
+function activeUsers() {
+    io.on('connection', socket => {
+        userCount++;
+        socket.on('disconnect', () => { userCount--; });
+      
+        socket.emit('user-count-change', userCount);
+      });
+      
+      setInterval(() => {
+        io.emit('user-count-change', userCount);
+      }, userCountUpdateDelay);
+}
+
+// Start the timer when the server starts
+updateTimer();
+// Show number of activate users
+activeUsers();
+
 
 // Handle disconnection
 io.on('disconnect', () => {
@@ -47,18 +68,11 @@ io.on('disconnect', () => {
     }
 });
 
-function formatTime(seconds) {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
-}
-
 const PORT = process.env.PORT || 3000;
 
 server.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
-
 
 app.use(express.static(__dirname));
 

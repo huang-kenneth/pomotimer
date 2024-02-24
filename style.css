@@ -1,11 +1,42 @@
 body {
+    margin-top: 1%;
+    padding:0;
+    text-align: center;
+    transition: background-color 3s, color 3s;
+    font-family: OCR A Std, monospace;
+}
+
+a {
+    font-size: x-large;
+    text-decoration: none;
+    color: inherit;
+}
+
+.title {
+    text-decoration: none;
+}
+
+.flex-container {
+    margin-right: 1%;
+    white-space: pre;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    margin: 0;
+    justify-content: flex-end;
+  }
+
+.light-mode {
+    background-color: rgb(224, 224, 224);
+    color: rgb(60, 60, 60);
+}
+
+.dark-mode {
+    background-color: rgb(32, 32, 32);
+    color: rgb(196, 196, 196);
 }
 
 #timer {
-    font-size: 2em;
+    margin-top: 5%;
+    margin-bottom: 5%;
+    display: grid;
+    height: 20vh;
+    font-size: 5em;
 }

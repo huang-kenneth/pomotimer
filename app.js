@@ -1,11 +1,25 @@
 const socket = io();
 
 socket.on('updateTimer', ({ time, is25MinuteInterval }) => {
-    document.getElementById('timer').innerText = time;
-    // Handle the interval flag as needed (e.g., update UI, change styles)
+    const bodyElement = document.body;
+    const timerElement = document.getElementById('timer');
+    const activityElement = document.getElementById('activity'); // New element for displaying activity
+    
+    timerElement.innerText = time;
+
+    // Toggle between light and dark modes based on is25MinuteInterval
     if (is25MinuteInterval) {
-        // Handle 25-minute interval
+        bodyElement.classList.remove('light-mode');
+        bodyElement.classList.add('dark-mode');
+        activityElement.innerText = "(study)"; // Set activity text
     } else {
-        // Handle 5-minute break interval
+        bodyElement.classList.remove('dark-mode');
+        bodyElement.classList.add('light-mode');
+        activityElement.innerText = "(break)"; // Set activity text
     }
 });
+
+socket.on('user-count-change', function (userCount) {
+    document.getElementById('userCount').innerText = userCount;
+});
+
