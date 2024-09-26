@@ -26,5 +26,5 @@ If you end up with a nodemon error, make sure it is installed globally via
 npm install -g nodemon
 ```
 
-## Side Notes
+## Side Note
 You may notice the website title is called Fomotimer. [This is not a typo! ](https://www.urbandictionary.com/define.php?term=fear%20of%20missing%20out)
